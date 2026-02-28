@@ -5,13 +5,13 @@ A CLI tool that manages [Claude Code hooks](https://docs.anthropic.com/en/docs/c
 ## Installation
 
 ```bash
-npm install -g claude-code-hook-manager
+npm install -g cchm
 ```
 
 Or run directly with npx:
 
 ```bash
-npx claude-code-hook-manager quickstart
+npx cchm quickstart
 ```
 
 ## How It Works

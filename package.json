@@ -1,5 +1,5 @@
 {
-  "name": "claude-code-hook-manager",
+  "name": "cchm",
   "version": "0.1.0",
   "description": "CLI tool to manage Claude Code hooks",
   "type": "module",
