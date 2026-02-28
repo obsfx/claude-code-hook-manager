@@ -37,11 +37,11 @@ When Claude Code triggers an event, it calls `cchm run <path>`, which executes t
 
 Not all events support both hook types. cchm enforces this automatically:
 
-| Category | Events | Prompt | Script |
-|----------|--------|--------|--------|
-| Plaintext | `SessionStart`, `UserPromptSubmit` | raw text | yes |
-| JSON (auto-wrapped) | `PreToolUse`, `PostToolUse`, `PostToolUseFailure`, `Stop`, `PermissionRequest`, `SubagentStop`, `TaskCompleted` | auto-wrapped in JSON | yes |
-| Script only | `Notification`, `SubagentStart`, `ConfigChange`, `PreCompact`, `SessionEnd`, `TeammateIdle`, `WorktreeCreate`, `WorktreeRemove` | blocked | yes |
+| Category            | Events                                                                                                                          | Prompt               | Script |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------- | -------------------- | ------ |
+| Plaintext           | `SessionStart`, `UserPromptSubmit`                                                                                              | raw text             | yes    |
+| JSON (auto-wrapped) | `PreToolUse`, `PostToolUse`, `PostToolUseFailure`, `Stop`, `PermissionRequest`, `SubagentStop`, `TaskCompleted`                 | auto-wrapped in JSON | yes    |
+| Script only         | `Notification`, `SubagentStart`, `ConfigChange`, `PreCompact`, `SessionEnd`, `TeammateIdle`, `WorktreeCreate`, `WorktreeRemove` | blocked              | yes    |
 
 ## Usage
 
@@ -124,6 +124,18 @@ set -euo pipefail
 jq -r ".prompt" < /dev/stdin >> /tmp/claude-prompts.log'
 ```
 
+### Block git operations
+
+```bash
+cchm PreToolUse add script prevent-git-ops --matcher "Bash" --content '#!/usr/bin/env bash
+set -euo pipefail
+command=$(jq -r ".tool_input.command" 2>/dev/null)
+if echo "$command" | grep -qE "git\s+(add|commit|push)"; then
+  echo "BLOCKED: git add, commit, and push are not allowed." >&2
+  exit 2
+fi'
+```
+
 ### Send desktop notification on task completion
 
 ```bash
@@ -135,11 +147,11 @@ osascript -e "display notification \"$message\" with title \"Claude Code\""'
 
 ## Flags
 
-| Flag | Description |
-|------|-------------|
-| `--content <text>` | Write content directly to the hook file, skipping `$EDITOR` |
-| `--matcher <regex>` | Regex matcher for the hook (e.g., `"Bash"` for PreToolUse to match tool name) |
-| `--project` | Target project-level hooks (`.claude/` in cwd) instead of global (`~/.claude/`) |
+| Flag                | Description                                                                     |
+| ------------------- | ------------------------------------------------------------------------------- |
+| `--content <text>`  | Write content directly to the hook file, skipping `$EDITOR`                     |
+| `--matcher <regex>` | Regex matcher for the hook (e.g., `"Bash"` for PreToolUse to match tool name)   |
+| `--project`         | Target project-level hooks (`.claude/` in cwd) instead of global (`~/.claude/`) |
 
 ## Project vs Global Hooks
 

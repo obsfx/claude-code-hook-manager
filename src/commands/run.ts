@@ -49,10 +49,15 @@ function runPrompt(relativePath: string, absolutePath: string): void {
 
 function runScript(absolutePath: string): void {
   const shell = getShell();
-  execSync(`${shell} "${absolutePath}"`, {
-    stdio: "inherit",
-    cwd: process.env["CLAUDE_PROJECT_DIR"] ?? process.cwd(),
-  });
+  try {
+    execSync(`${shell} "${absolutePath}"`, {
+      stdio: "inherit",
+      cwd: process.env["CLAUDE_PROJECT_DIR"] ?? process.cwd(),
+    });
+  } catch (err: unknown) {
+    const code = (err as { status?: number }).status ?? 1;
+    process.exit(code);
+  }
 }
 
 export function runHook(relativePath: string): void {
