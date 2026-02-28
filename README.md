@@ -2,6 +2,12 @@
 
 A CLI tool that manages [Claude Code hooks](https://docs.anthropic.com/en/docs/claude-code/hooks). It creates hook files, registers them in `settings.json`, and tracks metadata — so you don't have to manually edit JSON config files.
 
+
+
+https://github.com/user-attachments/assets/822ba7f8-086b-42c5-bf83-dc8f024a22a1
+
+
+
 ## Installation
 
 ```bash
